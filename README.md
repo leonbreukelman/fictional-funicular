@@ -1,5 +1,13 @@
 # AI-Native Spec-Driven Development Repository Template for AWS
 
+## Governance
+
+- AGENTS: See [AGENTS.md](AGENTS.md)
+- Constitution: See [.specify/memory/constitution.md](.specify/memory/constitution.md)
+- AWS MCP configuration: [.github/mcp/aws-mcp-config.json](.github/mcp/aws-mcp-config.json)
+- Region: Default comes from `.env` (`AWS_REGION`, default `us-east-1`). If `AWS_DEFAULT_REGION` exists in your environment, it MUST equal `AWS_REGION`.
+- Smoke test: `aws sts get-caller-identity` is read-only and should complete in ≤ 5 seconds under normal conditions.
+
 This README serves as a comprehensive guide to establishing an AI-native, spec-driven development repository optimized for AWS environments. It enables developers, AI agents, or agentic tools like GitHub Copilot CLI to configure and utilize the repository from scratch. The framework emphasizes structured workflows using GitHub's Spec Kit, real-time integration with AWS services via official Model Context Protocol (MCP) servers, and governance mechanisms to ensure compliance, security, and scalability. While focused on AWS, the design is modular, allowing substitution of AWS-specific components with equivalents from other cloud providers (e.g., Azure or GCP) through configuration adjustments.
 
 The repository supports semi-autonomous development: begin with human-guided AI assistance for planning and coding, then evolve toward fully AI-managed infrastructure using Amazon Bedrock Agents and Lambda functions. Defaults are configurable in centralized locations to accommodate variations without extensive rework.
@@ -118,6 +126,7 @@ Centralize configurations to minimize scattering and enable easy overrides.
   ```
 - Reference this in `.vscode/mcp.json` for VS Code integration.
 - Test: Run `npx -y @aws/mcp-servers-aws-api` to verify.
+  - Identity smoke test (read-only; ≤ 5s expected): `aws sts get-caller-identity --output json`
 
 For other clouds (e.g., Azure), create a parallel config (e.g., `azure-mcp-config.json`) and switch via env vars.
 
