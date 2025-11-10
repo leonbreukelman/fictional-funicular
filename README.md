@@ -8,7 +8,7 @@
 - Region: Default comes from `.env` (`AWS_REGION`, default `us-east-1`). If `AWS_DEFAULT_REGION` exists in your environment, it MUST equal `AWS_REGION`.
 - Smoke test: `aws sts get-caller-identity` is read-only and should complete in ≤ 5 seconds under normal conditions.
 
-This README serves as a comprehensive guide to establishing an AI-native, spec-driven development repository optimized for AWS environments. It enables developers, AI agents, or agentic tools like GitHub Copilot CLI to configure and utilize the repository from scratch. The framework emphasizes structured workflows using GitHub's Spec Kit, real-time integration with AWS services via official Model Context Protocol (MCP) servers, and governance mechanisms to ensure compliance, security, and scalability. While focused on AWS, the design is modular, allowing substitution of AWS-specific components with equivalents from other cloud providers (e.g., Azure or GCP) through configuration adjustments.
+This README serves as a comprehensive guide to establishing an AI-native, spec-driven development repository optimized for AWS environments. It enables developers, AI agents, or agentic tools like Copilot CLI to configure and utilize the repository from scratch. The framework emphasizes structured workflows using GitHub's Spec Kit, real-time integration with AWS services via official Model Context Protocol (MCP) servers, and governance mechanisms to ensure compliance, security, and scalability. While focused on AWS, the design is modular, allowing substitution of AWS-specific components with equivalents from other cloud providers (e.g., Azure or GCP) through configuration adjustments.
 
 The repository supports semi-autonomous development: begin with human-guided AI assistance for planning and coding, then evolve toward fully AI-managed infrastructure using Amazon Bedrock Agents and Lambda functions. Defaults are configurable in centralized locations to accommodate variations without extensive rework.
 
@@ -18,7 +18,7 @@ This document is crafted for accessibility by junior developers, enthusiasts, or
 
 This template repository facilitates:
 - **Spec-Driven Development (SDD)**: Define requirements first, then generate plans, tasks, and code using AI agents.
-- **AI Integration**: Leverage Copilot CLI (default) for natural language interactions, with options for alternatives like Claude.
+- **AI Integration**: Leverage  CLI (default) for natural language interactions, with options for alternatives like Claude.
 - **Cloud Connectivity**: Use official AWS MCP servers for querying AWS resources, documentation, and serverless operations in real time.
 - **Governance**: Embed non-negotiable principles (e.g., least-privilege IAM, serverless-first architecture) via constitution files and checklists.
 - **Modularity**: AWS components (e.g., Lambda, Bedrock) can be replaced by equivalents (e.g., Azure Functions, Azure AI) by updating configurations.
@@ -29,12 +29,12 @@ Key benefits include reduced manual effort, enforced best practices, and a repro
 ## Prerequisites
 
 Before setup, ensure the following are installed and configured:
-- **GitHub Account**: Required for repository creation and Copilot CLI authentication. Create a new repository on GitHub (e.g., via the web interface or `gh repo create <repo-name> --public`).
-- **Node.js 20+**: For running MCP servers and Copilot CLI. Install from [nodejs.org](https://nodejs.org/).
+- **GitHub Account**: Required for repository creation and  CLI authentication. Create a new repository on GitHub (e.g., via the web interface or `gh repo create <repo-name> --public`).
+- **Node.js 20+**: For running MCP servers and  CLI. Install from [nodejs.org](https://nodejs.org/).
 - **Python 3.12+**: For backend services (e.g., FastAPI) and tools. Install from [python.org](https://www.python.org/).
 - **uv Tool**: For Python package management. Install via `python -m pip install --upgrade uv`.
 - **AWS CLI**: For AWS interactions. Install from [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure with `aws configure` (use default profile unless specified).
-- **Copilot CLI (copilot)**: Required for repository management. Install from [https://github.com/github/copilot-cli](https://github.com/github/copilot-cli).
+- ** CLI ()**: Required for repository management. Install from [https://github.com/github/-cli](https://github.com/github/-cli).
 - **Visual Studio Code (VS Code)**: Recommended IDE with extensions for GitHub Copilot and AWS Toolkit.
 - **AWS Account**: With access to services like Bedrock, Lambda, and IAM. Default region: us-east-1 (configurable).
 
@@ -54,7 +54,7 @@ No Docker or dev containers are required; setups are native and script-based for
 3. **Initialize the Project**:
    - Run: `specify init . --here --ai copilot --script sh --ignore-agent-tools`.
      - `--here`: Uses the current directory.
-     - `--ai copilot`: Configures for GitHub Copilot CLI (default; change to `claude` or others as needed).
+     - `--ai copilot`: Configures for Copilot CLI (default; change to `claude` or others as needed).
      - `--script sh`: Generates Bash scripts (use `ps` for PowerShell).
      - `--ignore-agent-tools`: Skips checks for AI binaries.
    - This creates the `.specify/` directory with templates, scripts, and initial specs.
@@ -131,9 +131,9 @@ Centralize configurations to minimize scattering and enable easy overrides.
 For other clouds (e.g., Azure), create a parallel config (e.g., `azure-mcp-config.json`) and switch via env vars.
 
 ### AI Agent Configuration
-- **Default: GitHub Copilot CLI**:
-  - Install: `npm install -g @github/copilot-cli`.
-  - Authenticate: `copilot-cli login`.
+- **Default: Copilot CLI**:
+  - Install: `npm install -g @github/copilot`.
+  - Authenticate: `copilot login`.
 - Create `AGENTS.md` at root for AI guidance:
   ```
   # AI Agent Instructions
