@@ -18,7 +18,7 @@ This document is crafted for accessibility by junior developers, enthusiasts, or
 
 This template repository facilitates:
 - **Spec-Driven Development (SDD)**: Define requirements first, then generate plans, tasks, and code using AI agents.
-- **AI Integration**: Leverage GitHub Copilot CLI (default) for natural language interactions, with options for alternatives like Claude.
+- **AI Integration**: Leverage Copilot CLI (default) for natural language interactions, with options for alternatives like Claude.
 - **Cloud Connectivity**: Use official AWS MCP servers for querying AWS resources, documentation, and serverless operations in real time.
 - **Governance**: Embed non-negotiable principles (e.g., least-privilege IAM, serverless-first architecture) via constitution files and checklists.
 - **Modularity**: AWS components (e.g., Lambda, Bedrock) can be replaced by equivalents (e.g., Azure Functions, Azure AI) by updating configurations.
@@ -34,7 +34,7 @@ Before setup, ensure the following are installed and configured:
 - **Python 3.12+**: For backend services (e.g., FastAPI) and tools. Install from [python.org](https://www.python.org/).
 - **uv Tool**: For Python package management. Install via `python -m pip install --upgrade uv`.
 - **AWS CLI**: For AWS interactions. Install from [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure with `aws configure` (use default profile unless specified).
-- **GitHub CLI (gh)**: Optional but recommended for repository management. Install from [cli.github.com](https://cli.github.com/).
+- **Copilot CLI (copilot)**: Required for repository management. Install from [https://github.com/github/copilot-cli](https://github.com/github/copilot-cli).
 - **Visual Studio Code (VS Code)**: Recommended IDE with extensions for GitHub Copilot and AWS Toolkit.
 - **AWS Account**: With access to services like Bedrock, Lambda, and IAM. Default region: us-east-1 (configurable).
 
