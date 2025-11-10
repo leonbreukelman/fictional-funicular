@@ -34,7 +34,7 @@ Before setup, ensure the following are installed and configured:
 - **Python 3.12+**: For backend services (e.g., FastAPI) and tools. Install from [python.org](https://www.python.org/).
 - **uv Tool**: For Python package management. Install via `python -m pip install --upgrade uv`.
 - **AWS CLI**: For AWS interactions. Install from [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure with `aws configure` (use default profile unless specified).
-- ** CLI ()**: Required for repository management. Install from [https://github.com/github/-cli](https://github.com/github/-cli).
+- ** CLI (copilot)**: Required for repository management. Install from [Copilot CLI](https://github.com/github/copilot-cli).
 - **Visual Studio Code (VS Code)**: Recommended IDE with extensions for GitHub Copilot and AWS Toolkit.
 - **AWS Account**: With access to services like Bedrock, Lambda, and IAM. Default region: us-east-1 (configurable).
 
