@@ -1,0 +1,19 @@
+{
+  "name": "fictional-funicular",
+  "version": "0.1.0",
+  "description": "AI-Native Repository Setup - Node.js Utilities",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
