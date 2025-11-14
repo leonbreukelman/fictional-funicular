@@ -1,0 +1,568 @@
+openapi: 3.0.3
+info:
+  title: AI-Native Repository Agent API
+  description: Internal API for agent memory management and MCP coordination
+  version: 1.0.0
+  contact:
+    name: Repository Maintainers
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+paths:
+  /memory/store:
+    post:
+      summary: Store context in agent memory
+      operationId: storeMemoryContext
+      tags:
+        - Memory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreMemoryRequest'
+      responses:
+        '201':
+          description: Memory stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /memory/search:
+    get:
+      summary: Search agent memory by semantic similarity
+      operationId: searchMemoryContext
+      tags:
+        - Memory
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query text
+        - name: namespace
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by namespace prefix
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+          description: Maximum number of results
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMemoryResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /memory/{memory_id}:
+    get:
+      summary: Retrieve specific memory context by ID
+      operationId: getMemoryContext
+      tags:
+        - Memory
+      parameters:
+        - name: memory_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Memory context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryContext'
+        '404':
+          description: Memory not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete memory context
+      operationId: deleteMemoryContext
+      tags:
+        - Memory
+      parameters:
+        - name: memory_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Memory deleted successfully
+        '404':
+          description: Memory not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /mcp/coordinate:
+    post:
+      summary: Coordinate task across multiple agents
+      operationId: coordinateTask
+      tags:
+        - MCP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoordinateTaskRequest'
+      responses:
+        '200':
+          description: Task coordinated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoordinateTaskResponse'
+        '400':
+          description: Invalid task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Agent unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /mcp/agents:
+    get:
+      summary: List registered agents
+      operationId: listAgents
+      tags:
+        - MCP
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentListResponse'
+
+  /mcp/agents/{agent_id}:
+    post:
+      summary: Register or update agent
+      operationId: registerAgent
+      tags:
+        - MCP
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z_]+$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAgentRequest'
+      responses:
+        '201':
+          description: Agent registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '400':
+          description: Invalid agent definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /workflow/hardening:
+    post:
+      summary: Execute code hardening workflow
+      operationId: executeHardening
+      tags:
+        - Workflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardeningRequest'
+      responses:
+        '200':
+          description: Hardening phase complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardeningResponse'
+        '400':
+          description: Invalid code or phase
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /constitution/check:
+    post:
+      summary: Validate against constitution principles
+      operationId: checkConstitution
+      tags:
+        - Constitution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstitutionCheckRequest'
+      responses:
+        '200':
+          description: Validation results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstitutionCheckResponse'
+
+components:
+  schemas:
+    StoreMemoryRequest:
+      type: object
+      required:
+        - memory_key
+        - content
+      properties:
+        memory_key:
+          type: string
+          pattern: '^[a-z_]+:[0-9]{3}-[a-z-]+:[a-z_]+$'
+          example: "prompt_dna:001-repo-setup:patterns"
+        content:
+          type: string
+          example: "Chain-of-thought example: Step 1..."
+        metadata:
+          type: object
+          additionalProperties: true
+          example:
+            principle: "Chain-of-Thought"
+            feature: "001-repo-setup"
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MemoryResponse:
+      type: object
+      properties:
+        memory_id:
+          type: string
+          format: uuid
+        memory_key:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    SearchMemoryResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemoryContext'
+        total:
+          type: integer
+
+    MemoryContext:
+      type: object
+      properties:
+        memory_id:
+          type: string
+          format: uuid
+        memory_key:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        relevance_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    CoordinateTaskRequest:
+      type: object
+      required:
+        - task_type
+        - task_data
+      properties:
+        task_type:
+          type: string
+          enum:
+            - specify
+            - plan
+            - implement
+            - hardening
+            - checklist
+        task_data:
+          type: object
+          additionalProperties: true
+        target_agents:
+          type: array
+          items:
+            type: string
+          description: Specific agents to use (optional, auto-select if empty)
+
+    CoordinateTaskResponse:
+      type: object
+      properties:
+        task_id:
+          type: string
+          format: uuid
+        result:
+          type: object
+          additionalProperties: true
+        agents_used:
+          type: array
+          items:
+            type: string
+        execution_time_ms:
+          type: integer
+
+    AgentListResponse:
+      type: object
+      properties:
+        agents:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentSummary'
+
+    AgentSummary:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        agent_type:
+          type: string
+          enum:
+            - ORCHESTRATOR
+            - MEMORY
+            - WORKFLOW
+            - CUSTOM
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - ERROR
+
+    RegisterAgentRequest:
+      type: object
+      required:
+        - agent_type
+        - role_description
+      properties:
+        agent_type:
+          type: string
+          enum:
+            - ORCHESTRATOR
+            - MEMORY
+            - WORKFLOW
+            - CUSTOM
+        role_description:
+          type: string
+          minLength: 10
+        constraints:
+          type: array
+          items:
+            type: string
+        memory_keys:
+          type: array
+          items:
+            type: string
+            pattern: '^[a-z_]+:[0-9]{3}-[a-z-]+:[a-z_]+$'
+        mcp_capabilities:
+          type: array
+          items:
+            type: string
+
+    AgentResponse:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        agent_type:
+          type: string
+        status:
+          type: string
+        registered_at:
+          type: string
+          format: date-time
+
+    HardeningRequest:
+      type: object
+      required:
+        - code
+        - phase
+      properties:
+        code:
+          type: string
+          description: Code snippet to harden
+        phase:
+          type: integer
+          minimum: 1
+          maximum: 4
+          description: Hardening phase (1-4)
+        language:
+          type: string
+          enum:
+            - python
+            - javascript
+            - typescript
+          default: python
+        previous_phase_output:
+          type: object
+          nullable: true
+          description: Output from previous phase (if applicable)
+
+    HardeningResponse:
+      type: object
+      properties:
+        phase:
+          type: integer
+        phase_name:
+          type: string
+        phase_output:
+          type: object
+          additionalProperties: true
+        gate_approved:
+          type: boolean
+        next_phase:
+          type: integer
+          nullable: true
+
+    ConstitutionCheckRequest:
+      type: object
+      required:
+        - artifact_path
+      properties:
+        artifact_path:
+          type: string
+          description: Path to spec/plan/tasks file
+        artifact_type:
+          type: string
+          enum:
+            - SPEC
+            - PLAN
+            - TASKS
+
+    ConstitutionCheckResponse:
+      type: object
+      properties:
+        checks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConstitutionCheck'
+        overall_status:
+          type: string
+          enum:
+            - PASS
+            - FAIL
+            - WARNING
+        summary:
+          type: string
+
+    ConstitutionCheck:
+      type: object
+      properties:
+        principle_id:
+          type: string
+          enum:
+            - "I"
+            - "II"
+            - "III"
+            - "IV"
+            - "V"
+            - "VI"
+            - "VII"
+        principle_name:
+          type: string
+        check_status:
+          type: string
+          enum:
+            - PASS
+            - FAIL
+            - WARNING
+        violation_details:
+          type: string
+          nullable: true
+        justification:
+          type: string
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: "ValidationError"
+        message:
+          type: string
+          example: "Invalid memory key format"
+        details:
+          type: object
+          additionalProperties: true
+          nullable: true
+        correlation_id:
+          type: string
+          format: uuid
+
+tags:
+  - name: Memory
+    description: Agent memory management operations
+  - name: MCP
+    description: Model Context Protocol coordination
+  - name: Workflow
+    description: Automated workflow execution
+  - name: Constitution
+    description: Governance and compliance validation
