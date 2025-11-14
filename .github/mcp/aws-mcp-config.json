@@ -1,0 +1,28 @@
+{
+  "servers": {
+    "aws-api": {
+      "command": "npx",
+      "args": ["-y", "@aws/mcp-servers-aws-api"],
+      "env": {
+        "AWS_REGION": "${env:AWS_REGION}",
+        "AWS_PROFILE": "${env:AWS_PROFILE}"
+      }
+    },
+    "aws-knowledge": {
+      "type": "remote",
+      "url": "https://mcp.us-east-1.amazonaws.com/knowledge"
+    },
+    "aws-serverless": {
+      "command": "npx",
+      "args": ["-y", "@aws/mcp-servers-serverless"]
+    },
+    "aws-bedrock-agentcore": {
+      "command": "npx",
+      "args": ["-y", "@aws/mcp-servers-bedrock-agentcore"]
+    },
+    "aws-bedrock-knowledgebases": {
+      "command": "npx",
+      "args": ["-y", "@aws/mcp-servers-bedrock-knowledgebases"]
+    }
+  }
+}
