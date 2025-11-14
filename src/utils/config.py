@@ -6,7 +6,7 @@ Handles environment variables and configuration loading.
 
 import os
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 
 class ConfigError(Exception):
